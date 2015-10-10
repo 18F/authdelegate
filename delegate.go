@@ -28,7 +28,7 @@ type authDelegateHandler struct {
 func (handler authDelegateHandler) ServeHTTP(
 	rw http.ResponseWriter, req *http.Request) {
 	for _, upstream := range handler.upstreams {
-		if upstream.Accepts(req) {
+		if upstream.accepts(req) {
 			upstream.handler.ServeHTTP(rw, req)
 			return
 		}
@@ -42,7 +42,7 @@ type authDelegate struct {
 	handler    http.Handler
 }
 
-func (delegate authDelegate) Accepts(req *http.Request) bool {
+func (delegate authDelegate) accepts(req *http.Request) bool {
 	if delegate.headerName != "" {
 		return req.Header.Get(delegate.headerName) != ""
 	} else if delegate.cookieName != "" {
